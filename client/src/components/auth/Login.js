@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { loginuser } from "../../actions/authActions";
+import { loginUser } from "../../actions/authActions";
 import TextFieldGroup from "../common/TextFieldGroup";
 
 class Login extends Component {
@@ -15,30 +15,36 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if (this.props.auth.isAuthenticaed) {
+    if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
   }
+
   componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticaed) {
+    if (nextProps.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
+
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
   }
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
 
   onSubmit = e => {
     e.preventDefault();
+
     const userData = {
       email: this.state.email,
       password: this.state.password
     };
-    this.props.loginuser(userData);
+
+    this.props.loginUser(userData);
   };
+
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
   render() {
     const { errors } = this.state;
 
@@ -49,7 +55,7 @@ class Login extends Component {
             <div className="col-md-8 m-auto">
               <h1 className="display-4 text-center">Log In</h1>
               <p className="lead text-center">
-                Sign in to your Techylink account
+                Sign in to your DevConnector account
               </p>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
@@ -60,6 +66,7 @@ class Login extends Component {
                   onChange={this.onChange}
                   error={errors.email}
                 />
+
                 <TextFieldGroup
                   placeholder="Password"
                   name="password"
@@ -79,7 +86,7 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  loginuser: PropTypes.func.isRequired,
+  loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -91,5 +98,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { loginuser }
+  { loginUser }
 )(Login);

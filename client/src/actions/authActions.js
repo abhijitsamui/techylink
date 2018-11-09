@@ -1,13 +1,14 @@
-import { GET_ERRORS, SET_CURRENT_USER } from "./types";
-import setAuthToken from "../utils/setAuthToken";
-import jwt_decode from "jwt-decode";
-import axios from "axios";
+import axios from 'axios';
+import setAuthToken from '../utils/setAuthToken';
+import jwt_decode from 'jwt-decode';
 
-//Register User
-export const registeruser = (userData, history) => dispatch => {
+import { GET_ERRORS, SET_CURRENT_USER } from './types';
+
+// Register User
+export const registerUser = (userData, history) => dispatch => {
   axios
-    .post("/api/users/register", userData)
-    .then(res => history.push("/login"))
+    .post('/api/users/register', userData)
+    .then(res => history.push('/login'))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -16,21 +17,20 @@ export const registeruser = (userData, history) => dispatch => {
     );
 };
 
-//Login -get user token
-
-export const loginuser = userData => dispatch => {
+// Login - Get User Token
+export const loginUser = userData => dispatch => {
   axios
-    .post("/api/users/login", userData)
+    .post('/api/users/login', userData)
     .then(res => {
-      //save to localstorage
+      // Save to localStorage
       const { token } = res.data;
-      //set token to localstorage
-      localStorage.setItem("jwtToken", token);
-      //set token to auth header
+      // Set token to ls
+      localStorage.setItem('jwtToken', token);
+      // Set token to Auth header
       setAuthToken(token);
-      //decode token to get userdata
+      // Decode token to get user data
       const decoded = jwt_decode(token);
-      //set current user
+      // Set current user
       dispatch(setCurrentUser(decoded));
     })
     .catch(err =>
@@ -41,7 +41,7 @@ export const loginuser = userData => dispatch => {
     );
 };
 
-//set  loggedin user
+// Set logged in user
 export const setCurrentUser = decoded => {
   return {
     type: SET_CURRENT_USER,
@@ -49,14 +49,12 @@ export const setCurrentUser = decoded => {
   };
 };
 
-//log user out
-
-export const logoutuser = () => dispatch => {
-  //Remove item from localstorage
-  localStorage.removeItem("jwtToken");
-  //Remove auth header for future request
+// Log user out
+export const logoutUser = () => dispatch => {
+  // Remove token from localStorage
+  localStorage.removeItem('jwtToken');
+  // Remove auth header for future requests
   setAuthToken(false);
-
-  //set current user to {} which will set isAuthenticaed to false
+  // Set current user to {} which will set isAuthenticated to false
   dispatch(setCurrentUser({}));
 };
