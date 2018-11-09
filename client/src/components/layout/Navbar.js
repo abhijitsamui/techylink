@@ -7,7 +7,7 @@ import { logoutuser } from "../../actions/authActions";
 class Navbar extends Component {
   onLogoutClick = e => {
     e.preventDefault();
-    this.props.logoutuser();
+    this.props.logoutuser(this.props.history);
   };
   render() {
     const { isAuthenticaed, user } = this.props.auth;
